@@ -1,33 +1,33 @@
 apiVersion: dp.wso2.com/v1alpha1
 kind: API
 metadata:
-  name: product-api
-  namespace: argocd
+  name: shopkart-api
+  namespace: shopkart
 spec:
-  apiName: ProductAPI
+  apiName: ShopKartAPI
   apiVersion: 1.0.0
   apiType: REST
-  basePath: /products/1.0.0
-  organization: default
+  basePath: /shopkart/1.0.0
+  organization: shopkart
   definition:
     inline:
       openAPISpec: |
         openapi: 3.0.1
         info:
-          title: Product API
+          title: ShopKart API
           version: 1.0.0
         paths:
           /products:
             get:
-              summary: List all available products// changing summary: (updated
+              summary: List all available products from ShopKart
               responses:
                 "200":
                   description: OK
   production:
     - httpRouteRefs:
-        - prod-productapi-route
+        - prod-shopkartapi-route
   sandbox:
     - httpRouteRefs:
-        - sand-productapi-route
+        - sand-shopkartapi-route
 
   mode: privateJet
