@@ -34,7 +34,7 @@ jobs:
       - name: Import API to Dev
         run: |
           apictl delete api -n ProductAPI -v 1.0.0 -e dev --insecure
-          apictl import api -f dev/ProductAPI/ -e dev --preserve-provider=false --update --insecure
+          apictl import api -f dev/ShopKartAPI/ -e dev --preserve-provider=false --update --insecure
 
       - name: Run Tests (Optional)
         run: |
