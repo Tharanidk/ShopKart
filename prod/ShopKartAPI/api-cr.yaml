@@ -1,0 +1,33 @@
+apiVersion: dp.wso2.com/v1alpha1
+kind: API
+metadata:
+  name: product-api
+  namespace: argocd
+spec:
+  apiName: ProductAPI
+  apiVersion: 1.0.0
+  apiType: REST
+  basePath: /products/1.0.0
+  organization: default
+  definition:
+    inline:
+      openAPISpec: |
+        openapi: 3.0.1
+        info:
+          title: Product API
+          version: 1.0.0
+        paths:
+          /products:
+            get:
+              summary: List all available products// changing summary: (updated
+              responses:
+                "200":
+                  description: OK
+  production:
+    - httpRouteRefs:
+        - prod-productapi-route
+  sandbox:
+    - httpRouteRefs:
+        - sand-productapi-route
+
+  mode: privateJet
