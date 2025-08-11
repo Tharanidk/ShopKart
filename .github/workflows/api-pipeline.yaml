@@ -37,8 +37,8 @@ jobs:
 
       - name: Run Tests (Optional)
         run: |
-          apictl get apis -e dev --insecure | awk 'NR>1 {print}' | grep -E "ShopKartAPI" || {
-            echo "ShopKartAPI not found in Publisher (dev)."
+          apictl get apis -e dev --insecure | awk 'NR>1 {print}' | grep -E "ShopKartProductAPI" || {
+            echo "ShopKartProductAPI not found in Publisher (dev)."
             exit 1
           }
-          echo "ShopKartAPI is present in Publisher (dev)"
+          echo "ShopKartProductAPI is present in Publisher (dev)"
