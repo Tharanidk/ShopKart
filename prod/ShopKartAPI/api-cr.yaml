@@ -9,6 +9,20 @@ spec:
   apiType: REST
   basePath: /ShopKartProductAPI/1.0.0
   organization: default
+  definition:
+    inline:
+      openAPISpec: |
+        openapi: 3.0.1
+        info:
+          title: ShopKart Product API
+          version: 1.0.0
+        paths:
+          /products:
+            get:
+              responses:
+                "200":
+                  description: Successfully retrieved the product list.
+              summary: Get list of ShopKart products
   production:
     - httpRouteRefs:
         - prod-productapi-route
