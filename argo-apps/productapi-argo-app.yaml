@@ -18,6 +18,8 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
   ignoreDifferences:
     - group: dp.wso2.com
       kind: API
@@ -26,4 +28,4 @@ spec:
       jsonPointers:
         - /status
         - /metadata/annotations
-        - /spec/definition
+        - /spec/definition/inline/openAPISpec

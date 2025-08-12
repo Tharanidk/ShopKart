@@ -4,30 +4,15 @@ metadata:
   name: shopkart-api
   namespace: shopkart
 spec:
-  apiName: ShopKartAPI
+  apiName: ShopKartProductAPI
   apiVersion: 1.0.0
   apiType: REST
-  basePath: /shopkart/1.0.0
-  organization: shopkart
+  basePath: /ShopKartProductAPI/1.0.0
+  organization: admin
   definition:
-    inline:
-      openAPISpec: |
-        openapi: 3.0.1
-        info:
-          title: ShopKart API
-          version: 1.0.0
-        paths:
-          /products:
-            get:
-              summary: List all available products from ShopKart
-              responses:
-                "200":
-                  description: OK
   production:
-    - httpRouteRefs:
-        - prod-shopkartapi-route
+      url: https://run.mocky.io/v3/5988d96d-16ad-4bb0-bc9c-92a57480a303
   sandbox:
-    - httpRouteRefs:
-        - sand-shopkartapi-route
+      url: https://run.mocky.io/v3/5988d96d-16ad-4bb0-bc9c-92a57480a303
 
   mode: privateJet
