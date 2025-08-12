@@ -66,14 +66,13 @@ spec:
               apictl version
 
               echo "==> Register + login to PROD Publisher"
-              apictl add env prod --apim https://${{ secrets.WSO2_PROD_APIM }}
-              apictl login prod -u ${{ secrets.APIM_USERNAME }} -p ${{ secrets.APIM_PASSWORD }} --insecure
+              apictl add env prod --apim "https://${APIM_HOST}"
+              apictl login prod -u "${APIM_USER}" -p "${APIM_PASS}" --insecure
 
               echo "==> Import/Update ShopKartAPI from ${API_PATH}"
-              apictl import api -f prod/ShopKartAPI/ -e prod --preserve-provider=false --update --insecure
-                --preserve-provider=false --update --insecure
+              apictl import api -f "${API_PATH}" -e prod --preserve-provider=false --update --insecure
 
-              echo "Import API to Prod environment."
+              echo "Import API to Prod environment Successful."
           volumeMounts:
             - name: workspace
               mountPath: /workspace
