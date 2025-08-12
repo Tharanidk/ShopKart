@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: shopkart-api
+  name: shopkart-api
   namespace: shopkart
   annotations:
     argocd.argoproj.io/hook: PostSync
@@ -34,19 +34,20 @@ spec:
                   name: apim-prod-credentials
                   key: APIM_PASS
           command: ["/bin/sh","-lc"]
-          args: |
-            set -euo pipefail
-            apk add --no-cache curl tar jq ca-certificates
-            curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
-            tar -xzf /tmp/apictl.tgz -C /usr/local/bin --strip-components=1 apictl/apictl
-            chmod +x /usr/local/bin/apictl
-            apictl version
+          args:
+            - |
+              set -euo pipefail
+              apk add --no-cache curl tar jq ca-certificates
+              curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
+              tar -xzf /tmp/apictl.tgz -C /usr/local/bin --strip-components=1 apictl/apictl
+              chmod +x /usr/local/bin/apictl
+              apictl version
 
-            echo "==> Register + login to PROD Publisher"
-            apictl add env prod --apim "https://${APIM_HOST}"
-            apictl login prod -u "${APIM_USER}" -p "${APIM_PASS}" --insecure
+              echo "==> Register + login to PROD Publisher"
+              apictl add env prod --apim "https://${APIM_HOST}"
+              apictl login prod -u "${APIM_USER}" -p "${APIM_PASS}" --insecure
 
-            echo "==> Import/Update ShopKartAPI from ${API_PATH}"
-            apictl import api -f "${API_PATH}" -e prod --preserve-provider=false --update --insecure
+              echo "==> Import/Update ShopKartAPI from ${API_PATH}"
+              apictl import api -f "${API_PATH}" -e prod --preserve-provider=false --update --insecure
 
-            echo "Import API to Prod environment is successful."
+              echo "Import API to Prod environment is successful."
