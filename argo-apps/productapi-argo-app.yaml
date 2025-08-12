@@ -18,3 +18,12 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  ignoreDifferences:
+    - group: dp.wso2.com
+      kind: API
+      name: shopkart-api
+      namespace: shopkart
+      jsonPointers:
+        - /status
+        - /metadata/annotations
+        - /spec/definition
