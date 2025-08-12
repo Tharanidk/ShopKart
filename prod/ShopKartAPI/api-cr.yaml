@@ -2,7 +2,7 @@ apiVersion: dp.wso2.com/v1alpha1
 kind: API
 metadata:
   name: shopkart-api
-  namespace: argocd
+  namespace: shopkart
 spec:
   apiName: ShopKartProductAPI
   apiVersion: 1.0.0
