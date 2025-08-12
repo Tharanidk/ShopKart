@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: shopkart-api-   
+  generateName: shopkart-api
   namespace: shopkart
   annotations:
     argocd.argoproj.io/hook: PostSync
