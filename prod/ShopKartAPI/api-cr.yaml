@@ -14,15 +14,15 @@ spec:
       openAPISpec: |
         openapi: 3.0.1
         info:
-          title: Product API
+          title: ShopKart Product API
           version: 1.0.0
         paths:
           /products:
             get:
-              summary: List all available products// changing summary: (updated
               responses:
                 "200":
-                  description: OK
+                  description: Successfully retrieved the product list.
+              summary: Get list of ShopKart products
   production:
     - httpRouteRefs:
         - prod-productapi-route
