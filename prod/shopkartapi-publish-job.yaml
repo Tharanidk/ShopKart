@@ -1,0 +1,79 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: shopkartapi-publish
+  namespace: shopkart
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: workspace
+          emptyDir: {}
+      initContainers:
+        - name: fetch-repo
+          image: alpine/git:2.45
+          env:
+            - name: GIT_URL
+              value: "https://github.com/Tharanidk/ShopKart.git"
+            - name: GIT_REV
+              value: "main"
+          command: ["/bin/sh","-lc"]
+          args:
+            - |
+              set -e
+              git clone --depth 1 "$GIT_URL" /workspace/repo
+              cd /workspace/repo
+              git checkout "$GIT_REV" || true
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace
+
+      containers:
+        - name: apictl
+          image: alpine:3.20
+          env:
+            - name: API_PATH
+              value: /workspace/repo/prod/ShopKartAPI
+            - name: APIM_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: apim-prod-credentials
+                  key: APIM_HOST
+            - name: APIM_USER
+              valueFrom:
+                secretKeyRef:
+                  name: apim-prod-credentials
+                  key: APIM_USER
+            - name: APIM_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: apim-prod-credentials
+                  key: APIM_PASS
+          command: ["/bin/sh","-lc"]
+          args:
+            - |
+              set -euo pipefail
+              apk add --no-cache curl tar jq ca-certificates
+              curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
+              tar -xzf /tmp/apictl.tgz -C /usr/local/bin --strip-components=1 apictl/apictl
+              chmod +x /usr/local/bin/apictl
+              apictl version
+
+              echo "==> Register + login to PROD Publisher"
+              apictl add env prod --apim https://${{ secrets.WSO2_PROD_APIM }}
+              apictl login prod -u ${{ secrets.APIM_USERNAME }} -p ${{ secrets.APIM_PASSWORD }} --insecure
+
+              echo "==> Import/Update ShopKartAPI from ${API_PATH}"
+              apictl import api -f prod/ShopKartAPI/ -e prod --preserve-provider=false --update --insecure
+                --preserve-provider=false --update --insecure
+
+              echo "Import API to Prod environment."
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace

@@ -6,9 +6,9 @@ metadata:
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: wso2-apim
+    namespace: shopkart
   source:
-    repoURL: https://github.com/Tharanidk/wso2-api-gitops
+    repoURL: https://github.com/Tharanidk/ShopKart.git
     targetRevision: main
     path: prod
   project: default
