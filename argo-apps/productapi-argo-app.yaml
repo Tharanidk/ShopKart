@@ -27,5 +27,6 @@ spec:
       namespace: shopkart
       jsonPointers:
         - /status
+        - /metadata/annotations/argocd.argoproj.io~1tracking-id
         - /metadata/annotations
-        - /spec/definition/inline/openAPISpec
+        - /spec/definition
