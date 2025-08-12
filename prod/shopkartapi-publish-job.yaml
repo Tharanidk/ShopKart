@@ -12,34 +12,12 @@ spec:
   template:
     spec:
       restartPolicy: Never
-      volumes:
-        - name: workspace
-          emptyDir: {}
-      initContainers:
-        - name: fetch-repo
-          image: alpine/git:2.45
-          env:
-            - name: GIT_URL
-              value: "https://github.com/Tharanidk/ShopKart.git"
-            - name: GIT_REV
-              value: "main"
-          command: ["/bin/sh","-lc"]
-          args:
-            - |
-              set -e
-              git clone --depth 1 "$GIT_URL" /workspace/repo
-              cd /workspace/repo
-              git checkout "$GIT_REV" || true
-          volumeMounts:
-            - name: workspace
-              mountPath: /workspace
-
       containers:
         - name: apictl
           image: alpine:3.20
           env:
             - name: API_PATH
-              value: /workspace/repo/prod/ShopKartAPI
+              value: /prod/ShopKartAPI
             - name: APIM_HOST
               valueFrom:
                 secretKeyRef:
@@ -72,7 +50,4 @@ spec:
               echo "==> Import/Update ShopKartAPI from ${API_PATH}"
               apictl import api -f "${API_PATH}" -e prod --preserve-provider=false --update --insecure
 
-              echo "Import API to Prod environment Successful."
-          volumeMounts:
-            - name: workspace
-              mountPath: /workspace
+              echo "Import API to Prod environment is successdul."
