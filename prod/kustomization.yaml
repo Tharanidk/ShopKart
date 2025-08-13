@@ -11,4 +11,5 @@ generatorOptions:
   disableNameSuffixHash: true
 
 resources:
+  - ShopKartAPI
   - shopkartapi-publish-job.yaml
