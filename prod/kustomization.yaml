@@ -1,0 +1,11 @@
+configMapGenerator:
+  - name: shopkart-api-src
+    namespace: shopkart
+    files:
+     # include all API project files here
+      - ShopKartAPI/api.yaml
+      - ShopKartAPI/api_meta.yaml
+      - ShopKartAPI/deployment_environment.yaml
+      - ShopKartAPI/Definitions/swagger.yaml
+generatorOptions:
+  disableNameSuffixHash: true

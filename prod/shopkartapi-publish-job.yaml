@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: shopkart-api
+  generateName: shopkart-api-
   namespace: shopkart
   annotations:
     argocd.argoproj.io/hook: PostSync
@@ -16,8 +16,10 @@ spec:
         - name: apictl
           image: alpine:3.20
           env:
+            - name: REPO_URL
+              value: https://github.com/Tharanidk/ShopKart.git
             - name: API_PATH
-              value: /prod/ShopKartAPI
+              value: prod/ShopKartAPI
             - name: APIM_HOST
               valueFrom:
                 secretKeyRef:
@@ -33,21 +35,27 @@ spec:
                 secretKeyRef:
                   name: apim-prod-credentials
                   key: APIM_PASS
-          command: ["/bin/sh","-lc"]
+          command: ["/bin/sh", "-lc"]
           args:
             - |
               set -euo pipefail
-              apk add --no-cache curl tar jq ca-certificates
+              apk add --no-cache curl tar jq ca-certificates git
+
+              echo "==> Download apictl"
               curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
               tar -xzf /tmp/apictl.tgz -C /usr/local/bin --strip-components=1 apictl/apictl
               chmod +x /usr/local/bin/apictl
               apictl version
 
+              echo "==> Clone API repo"
+              git clone --depth 1 "$REPO_URL" /tmp/repo
+              cd /tmp/repo/"$API_PATH"
+
               echo "==> Register + login to PROD Publisher"
               apictl add env prod --apim "https://${APIM_HOST}"
               apictl login prod -u "${APIM_USER}" -p "${APIM_PASS}" --insecure
 
-              echo "==> Import/Update ShopKartAPI from ${API_PATH}"
-              apictl import api -f "${API_PATH}" -e prod --preserve-provider=false --update --insecure
+              echo "==> Import/Update API from $(pwd)"
+              apictl import api -f . -e prod --preserve-provider=false --update --insecure
 
-              echo "Import API to Prod environment is successful."
+              echo "==> Import API to Prod environment successful."
