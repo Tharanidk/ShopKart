@@ -13,4 +13,3 @@ generatorOptions:
 resources:
   - api-cr.yaml
   - apim-prod-credentials.yaml
-  - shopkartapi-publish-job.yaml
