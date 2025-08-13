@@ -1,6 +1,6 @@
+namespace: shopkart
 configMapGenerator:
   - name: shopkart-api-src
-    namespace: shopkart
     files:
      # include all API project files here
       - api.yaml
