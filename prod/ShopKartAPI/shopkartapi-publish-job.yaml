@@ -36,24 +36,25 @@ spec:
                   name: apim-prod-credentials
                   key: APIM_PASS
           command: ["/bin/sh", "-lc"]
-          args: |
-            set -euo pipefail
+          args:
+            - |
+              set -euo pipefail
 
-            echo "==> Install apictl"
-            curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
-            tar -xzf /tmp/apictl.tgz -C /usr/local/bin --strip-components=1 apictl/apictl
-            chmod +x /usr/local/bin/apictl
-            apictl version
+              echo "==> Install apictl"
+              curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
+              tar -xzf /tmp/apictl.tgz -C /usr/local/bin --strip-components=1 apictl/apictl
+              chmod +x /usr/local/bin/apictl
+              apictl version
 
-            echo "==> Clone the same source used by Argo CD"
-            git clone --depth 1 "$REPO_URL" /workspace/repo
-            cd /workspace/repo/"$API_SUBPATH"
+              echo "==> Clone the same source used by Argo CD"
+              git clone --depth 1 "$REPO_URL" /workspace/repo
+              cd /workspace/repo/"$API_SUBPATH"
 
-            echo "==> Login to PROD"
-            apictl add env prod --apim "https://${APIM_HOST}"
-            apictl login prod -u "${APIM_USER}" -p "${APIM_PASS}" --insecure
+              echo "==> Login to PROD"
+              apictl add env prod --apim "https://${APIM_HOST}"
+              apictl login prod -u "${APIM_USER}" -p "${APIM_PASS}" --insecure
 
-            echo "==> Import/Update API to PROD from $(pwd)"
-            apictl import api -f . -e prod --preserve-provider=false --update --insecure
+              echo "==> Import/Update API to PROD from $(pwd)"
+              apictl import api -f . -e prod --preserve-provider=false --update --insecure
 
-            echo "Import to PROD completed."
+              echo "Import to PROD completed."
