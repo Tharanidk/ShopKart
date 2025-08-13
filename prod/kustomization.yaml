@@ -9,3 +9,6 @@ configMapGenerator:
       - ShopKartAPI/Definitions/swagger.yaml
 generatorOptions:
   disableNameSuffixHash: true
+
+resources:
+  - shopkartapi-publish-job.yaml
