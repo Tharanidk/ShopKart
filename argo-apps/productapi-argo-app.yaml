@@ -30,3 +30,7 @@ spec:
         - /metadata/annotations/argocd.argoproj.io~1tracking-id
         - /metadata/annotations
         - /spec/definition
+    - group: batch
+      kind: Job
+      name: shopkartapi-publish-v2
+      namespace: shopkart
