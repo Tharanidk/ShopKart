@@ -5,7 +5,7 @@ configMapGenerator:
      # include all API project files here
       - api.yaml
       - api_meta.yaml
-      - deployment_environment.yaml
+      - deployment_environments.yaml
       - Definitions/swagger.yaml
 generatorOptions:
   disableNameSuffixHash: true
