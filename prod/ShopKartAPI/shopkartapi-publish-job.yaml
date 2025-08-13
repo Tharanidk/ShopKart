@@ -40,10 +40,14 @@ spec:
             - |
               set -euo pipefail
 
+              export HOME=/tmp/apictl-home
+              mkdir -p /workspace /tmp/bin "$HOME"
+
               echo "==> Install apictl"
               curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
-              tar -xzf /tmp/apictl.tgz -C /usr/local/bin --strip-components=1 apictl/apictl
-              chmod +x /usr/local/bin/apictl
+              tar -xzf /tmp/apictl.tgz -C /tmp/bin --strip-components=1 apictl/apictl
+              chmod +x /tmp/bin/apictl
+              export PATH="/tmp/bin:$PATH"
               apictl version
 
               echo "==> Clone the same source used by Argo CD"
@@ -51,7 +55,7 @@ spec:
               cd /workspace/repo/"$API_SUBPATH"
 
               echo "==> Login to PROD"
-              apictl add env prod --apim "https://${APIM_HOST}"
+              apictl add env prod --apim "https://${APIM_HOST}" || true
               apictl login prod -u "${APIM_USER}" -p "${APIM_PASS}" --insecure
 
               echo "==> Import/Update API to PROD from $(pwd)"
