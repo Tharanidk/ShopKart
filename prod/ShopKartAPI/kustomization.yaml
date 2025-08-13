@@ -9,7 +9,6 @@ configMapGenerator:
       - Definitions/swagger.yaml
 generatorOptions:
   disableNameSuffixHash: true
-
 resources:
   - api-cr.yaml
   - apim-prod-credentials.yaml
