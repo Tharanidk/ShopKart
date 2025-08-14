@@ -44,7 +44,14 @@ spec:
               mkdir -p /workspace /tmp/bin "$HOME"
 
               echo "==> Install apictl"
-              curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
+              APICTL_VERSION=4.5.0
+              ARCH="$(uname -m)"
+              case "$ARCH" in
+                x86_64|amd64) APICTL_TARBALL="apictl-${APICTL_VERSION}-linux-amd64.tar.gz" ;;
+                aarch64|arm64) APICTL_TARBALL="apictl-${APICTL_VERSION}-linux-arm64.tar.gz" ;;
+                *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+              esac
+              curl -L -o /tmp/apictl.tgz "https://github.com/wso2/product-apim-tooling/releases/download/v${APICTL_VERSION}/${APICTL_TARBALL}"
               echo "==> downloaded"
               tar -xzf /tmp/apictl.tgz -C /tmp/bin --strip-components=1 apictl/apictl
               echo "==> tar extracted"
