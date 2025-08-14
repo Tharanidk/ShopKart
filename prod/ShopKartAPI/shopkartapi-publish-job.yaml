@@ -45,9 +45,13 @@ spec:
 
               echo "==> Install apictl"
               curl -L -o /tmp/apictl.tgz https://github.com/wso2/product-apim-tooling/releases/download/v4.5.0/apictl-4.5.0-linux-amd64.tar.gz
+              echo "==> downloaded"
               tar -xzf /tmp/apictl.tgz -C /tmp/bin --strip-components=1 apictl/apictl
+              echo "==> tar extracted"
               chmod +x /tmp/bin/apictl
+              echo "==> chmod done"
               export PATH="/tmp/bin:$PATH"
+              echo "==> export done"
               apictl version
 
               echo "==> Clone the same source used by Argo CD"
