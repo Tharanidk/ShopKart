@@ -13,7 +13,7 @@ spec:
     spec:
       restartPolicy: Never
       nodeSelector:
-        kubernetes.io/arch: amd64
+        kubernetes.io/arch: arm64
       containers:
         - name: apictl
           image: bitnami/git:2.45.2  # Has Git, Curl, Tar, CA Certs pre-installed
