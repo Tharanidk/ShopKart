@@ -21,15 +21,7 @@ spec:
       - PrunePropagationPolicy=foreground
       - PruneLast=true
   ignoreDifferences:
-    - group: dp.wso2.com
-      kind: API
-      name: shopkart-api
-      namespace: shopkart
-      jsonPointers:
-        - /status
-        - /metadata/annotations/argocd.argoproj.io~1tracking-id
-        - /metadata/annotations
-        - /spec/definition
+    # Removed ignore rules for WSO2 API CR since it's no longer applied
     - group: batch
       kind: Job
       name: shopkartapi-publish-v2
