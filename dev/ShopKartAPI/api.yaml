@@ -18,6 +18,6 @@ data:
   endpointConfig:
     endpoint_type: http
     production_endpoints:
-      url: https://run.mocky.io/v3/5988d96d-16ad-4bb0-bc9c-92a57480a303
+      url: 
   endpointImplementationType: ENDPOINT
   websubSubscriptionConfiguration: null
