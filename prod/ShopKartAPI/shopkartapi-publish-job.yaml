@@ -16,6 +16,14 @@ spec:
         - name: apictl
           image: bitnami/git:2.45.2  # Has Git, Curl, Tar, CA Certs pre-installed
           env:
+            - name: REPO_URL
+              value: "https://github.com/Tharanidk/ShopKart.git"
+            - name: API_SUBPATH
+              value: "prod/ShopKartAPI"
+            - name: REVISION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['argocd.argoproj.io/revision']
             - name: APIM_HOST
               valueFrom:
                 secretKeyRef:
@@ -37,7 +45,7 @@ spec:
               set -euo pipefail
 
               export HOME=/tmp/apictl-home
-              mkdir -p /tmp/bin "$HOME"
+              mkdir -p /workspace /tmp/bin "$HOME"
 
               echo "==> Install apictl"
               APICTL_VERSION=4.5.0
@@ -48,18 +56,23 @@ spec:
                 *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
               esac
               curl -L -o /tmp/apictl.tgz "https://github.com/wso2/product-apim-tooling/releases/download/v${APICTL_VERSION}/${APICTL_TARBALL}"
-              echo "==> downloaded"
               tar -xzf /tmp/apictl.tgz -C /tmp/bin --strip-components=1 apictl/apictl
-              echo "==> tar extracted"
               chmod +x /tmp/bin/apictl
-              echo "==> chmod done"
               export PATH="/tmp/bin:$PATH"
-              echo "==> export done"
               apictl version
-              echo $ARCH
-              
-              echo "==> Using API project from ArgoCD workspace"
-              cd /workspace/prod/ShopKartAPI
+
+              echo "==> Fetching repo at ArgoCD revision: ${REVISION:-HEAD}"
+              git init /workspace/repo
+              cd /workspace/repo
+              git remote add origin "$REPO_URL"
+              if [ -n "${REVISION:-}" ]; then
+                git fetch --depth 1 origin "$REVISION"
+                git checkout --detach FETCH_HEAD
+              else
+                git fetch --depth 1 origin HEAD
+                git checkout --detach FETCH_HEAD
+              fi
+              cd "/workspace/repo/${API_SUBPATH}"
 
               echo "==> Login to PROD"
               apictl add env prod --apim "https://${APIM_HOST}" || true
@@ -69,11 +82,3 @@ spec:
               apictl import api -f . -e prod --preserve-provider=false --update --insecure
 
               echo "Import to PROD completed."
-          volumeMounts:
-            - name: argocd-workspace
-              mountPath: /workspace
-      volumes:
-        - name: argocd-workspace
-          hostPath:
-            path: /tmp/argocd-workspace
-            type: DirectoryOrCreate
