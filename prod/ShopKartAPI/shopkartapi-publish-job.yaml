@@ -16,10 +16,6 @@ spec:
         - name: apictl
           image: bitnami/git:2.45.2  # Has Git, Curl, Tar, CA Certs pre-installed
           env:
-            - name: REPO_URL
-              value: "https://github.com/Tharanidk/ShopKart.git"
-            - name: API_SUBPATH
-              value: "prod/ShopKartAPI"
             - name: APIM_HOST
               valueFrom:
                 secretKeyRef:
@@ -41,7 +37,7 @@ spec:
               set -euo pipefail
 
               export HOME=/tmp/apictl-home
-              mkdir -p /workspace /tmp/bin "$HOME"
+              mkdir -p /tmp/bin "$HOME"
 
               echo "==> Install apictl"
               APICTL_VERSION=4.5.0
@@ -61,9 +57,9 @@ spec:
               echo "==> export done"
               apictl version
               echo $ARCH
-              echo "==> Clone the same source used by Argo CD"
-              git clone --depth 1 "$REPO_URL" /workspace/repo
-              cd /workspace/repo/"$API_SUBPATH"
+              
+              echo "==> Using mounted API project from /workspace/api-project"
+              cd /workspace/api-project
 
               echo "==> Login to PROD"
               apictl add env prod --apim "https://${APIM_HOST}" || true
@@ -73,3 +69,11 @@ spec:
               apictl import api -f . -e prod --preserve-provider=false --update --insecure
 
               echo "Import to PROD completed."
+          volumeMounts:
+            - name: api-project-volume
+              mountPath: /workspace/api-project
+      volumes:
+        - name: api-project-volume
+          hostPath:
+            path: /Users/tharanikarunathilaka/Demo/ShopKart/prod/ShopKartAPI
+            type: Directory
