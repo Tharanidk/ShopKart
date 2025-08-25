@@ -58,8 +58,8 @@ spec:
               apictl version
               echo $ARCH
               
-              echo "==> Using mounted API project from /workspace/api-project"
-              cd /workspace/api-project
+              echo "==> Using API project from ArgoCD workspace"
+              cd /workspace/prod/ShopKartAPI
 
               echo "==> Login to PROD"
               apictl add env prod --apim "https://${APIM_HOST}" || true
@@ -70,10 +70,10 @@ spec:
 
               echo "Import to PROD completed."
           volumeMounts:
-            - name: api-project-volume
-              mountPath: /workspace/api-project
+            - name: argocd-workspace
+              mountPath: /workspace
       volumes:
-        - name: api-project-volume
+        - name: argocd-workspace
           hostPath:
-            path: /Users/tharanikarunathilaka/Demo/ShopKart/prod/ShopKartAPI
+            path: /tmp/argocd-workspace
             type: Directory
