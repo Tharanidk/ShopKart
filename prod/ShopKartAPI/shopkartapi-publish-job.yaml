@@ -76,4 +76,4 @@ spec:
         - name: argocd-workspace
           hostPath:
             path: /tmp/argocd-workspace
-            type: Directory
+            type: DirectoryOrCreate
